@@ -1,7 +1,7 @@
 Package: myexamplepaper
 Title: Examples from a great R workshop
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person(given = "Astrid Tvedte",
            family = "Kristoffersen",
            role = c("aut", "cre"),
@@ -13,3 +13,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports: bookdown,
+    here
+Suggests: devtools,
+    git2r

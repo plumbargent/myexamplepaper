@@ -1,0 +1,210 @@
+---
+title: "Examples from a great workshop"
+author:
+  - Astrid Tvedte Krisfoffersen:
+      email: tilastrid@gmail.com
+      institute: [UiO]
+      correspondence: true
+
+institute:
+  - UiO: University of Oslo
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    bookdown::pdf_document2:
+      fig_caption: yes
+      reference_docx: "../templates/template.docx" # Insert path for the DOCX file
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks.lua
+      - --lua-filter=../templates/pagebreak.lua
+bibliography: references.bib
+csl: "../templates/journal-of-archaeological-science.csl" # Insert path for the bib-style
+abstract: |
+  This document contain some text and some of the illustrations produced in the DialPast workshop Reproducable Quantitative Research in Archaeology, 23-26 March.
+  
+keywords: |
+  DialPast; RStudio; GitHub; Fun
+highlights: |
+  These are the highlights. 
+---
+
+<!-- This is the format for text comments that will be ignored during renderings. Do not put R code in these comments because it will not be ignored. -->
+
+<!-- With the following code you can access and display values from the yml header above. -->
+
+Keywords: `r rmarkdown::metadata$keywords`
+
+Highlights: `r rmarkdown::metadata$highlights`
+
+<!-- The following code chunk defines some general settings how code chunks should behave. -->
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  comment = "#>",
+  fig.path = "../figures/",
+  dpi = 300
+)
+```
+
+<!-- The actual document text starts here: -->
+
+# Introduction
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.  A citation [@Marwick2017]
+
+# Background
+
+The very intersting background of my project.
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+# Methods
+
+This is where I describe my methods...
+
+# Results
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+<!-- Here's my analysis code: -->
+
+``` {r get-data, eval = TRUE}
+
+my_data <- read.csv(here::here('analysis/data/raw_data/dialpast_data.csv'))
+
+```
+
+
+```{r preparations, echo = FALSE}
+
+# Load the libraries I need ---------------------------------------------
+
+library(tidyverse)
+#install.packages('tinytex') I will to this later
+#tinytex::install_tinytex() I will to this later
+#library(tinytex) I will to this later
+
+
+# Change the data class to correct type ---------------------------------
+
+# Change the data class from character to numeric
+
+my_data$model_age_dummy <- as.numeric(my_data$model_age_dummy) 
+
+# gives warning that no number will be NA. That is OK!
+
+# Make a data frame (object) with model age data -------------------------
+
+spindle_modelage <- 
+  my_data %>% select(decoration_type,
+                   model_age_dummy)
+
+# Make data frame with isotope data ---------------------------------------
+
+data_spindle_isotope <- my_data %>% 
+  select(sample_number, X208pb_204pb, X207pb_204pb, X206Pb_204Pb)
+
+```
+
+```{r isotope, fig.cap="Isotope ratios...something"}
+
+
+# Create a scatter plot with isotope data ----------------------------------------
+
+ggplot(data = data_spindle_isotope) +
+  aes(x = X206Pb_204Pb,
+      y = X207pb_204pb) +
+  geom_point(size = 1) +
+  labs(x = "206Pb/204Pb",
+       y = "207Pb/204Pb") +
+  theme_bw()
+
+```
+
+
+
+And now I will say something very interesting about the isotope ratios and the groups...
+
+
+
+
+```{r histogram, fig.cap="Model age, all spindle whorls"}
+
+
+# Make a histogram of the model age ----------------------------------------
+
+ggplot(data = my_data) +
+  aes(x = model_age_dummy) +
+  geom_histogram()
+
+# Group data by spindle type ----------------------------------------------
+
+spindle_groups <- 
+  spindle_modelage %>% 
+  group_by(decoration_type)
+
+
+# Remove the NAs ----------------------------------------------------------
+
+spindle_groups_no_na <-
+  spindle_groups %>% 
+  drop_na(model_age_dummy)
+
+```
+
+
+
+This is some lines of text before the next diagram.
+
+
+```{r facett-histogram, fig.cap="Model age, spindle whorls"}
+
+# Make a facetted histogram per spindle type ------------------------------
+
+ggplot(data = spindle_groups_no_na) +
+  aes(x = model_age_dummy) +
+  geom_histogram(binwidth = 30) +
+  facet_wrap(~decoration_type)
+
+```
+
+# Discussion
+
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+
+# Conclusion
+Sed ut perspiciatis unde omnis iste natus error sit  laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+
+# Acknowledgements
+
+<!-- The following line inserts a page break  -->
+
+\newpage
+
+# References 
+
+<!-- The following line ensures the references appear here for the MS Word or HTML output files, rather than right at the end of the document (this will not work for PDF files):  -->
+
+<div id="refs"></div>
+
+\newpage
+
+### Colophon
+
+This report was generated on `r Sys.time()` using the following computational environment and dependencies: 
+
+```{r colophon, cache = FALSE}
+# which R packages and versions?
+if ("devtools" %in% installed.packages()) devtools::session_info()
+```
+
+The current Git commit details are:
+
+```{r}
+# what commit is this file at? 
+if ("git2r" %in% installed.packages() & git2r::in_repository(path = ".")) git2r::repository(here::here())  
+```
