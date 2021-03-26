@@ -10,7 +10,7 @@ institute:
   - UiO: University of Oslo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
-    bookdown::pdf_document2:
+    bookdown::word_document2:
       fig_caption: yes
       reference_docx: "../templates/template.docx" # Insert path for the DOCX file
       pandoc_args:
@@ -84,10 +84,6 @@ my_data <- read.csv(here::here('analysis/data/raw_data/dialpast_data.csv'))
 # Load the libraries I need ---------------------------------------------
 
 library(tidyverse)
-#install.packages('tinytex') I will to this later
-#tinytex::install_tinytex() I will to this later
-#library(tinytex) I will to this later
-
 
 # Change the data class to correct type ---------------------------------
 
@@ -196,12 +192,7 @@ Sed ut perspiciatis unde omnis iste natus error sit  laboriosam, nisi ut aliquid
 ### Colophon
 
 This report was generated on `r Sys.time()` using the following computational environment and dependencies: 
-
-```{r colophon, cache = FALSE}
-# which R packages and versions?
-if ("devtools" %in% installed.packages()) devtools::session_info()
-```
-
+...
 The current Git commit details are:
 
 ```{r}
